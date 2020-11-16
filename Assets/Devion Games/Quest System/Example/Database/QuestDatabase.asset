@@ -1,0 +1,153 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-1808356242281022142
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9903c79ed490914385b1558b4a55a87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_QuestName: Welcome Quest
+  m_Title: Welcome Quest
+  m_Description: 'This is a simple example quest without any tasks. You can accept
+    it and immediately complete it. I hope you enjoy the quest system and give me
+    some feedback on the discord channel.
+
+
+    Thank you!'
+  rewards: []
+  m_AutoComplete: 0
+  m_RestartFailed: 1
+  m_TaskExecution: 0
+  conditions: []
+  tasks: []
+  references:
+    version: 1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5abfaaa994bbb124e8ceb26995cd12c8, type: 3}
+  m_Name: QuestDatabase
+  m_EditorClassIdentifier: 
+  items:
+  - {fileID: -1808356242281022142}
+  settings:
+  - {fileID: 7941438719000232702}
+  - {fileID: 9138027157831750570}
+  - {fileID: 9185008798727187450}
+  - {fileID: 8753248972121821995}
+--- !u!114 &7941438719000232702
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 778d048687ebc8141954ad6b344d100f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTag: Player
+  debugMessages: 1
+--- !u!114 &8753248972121821995
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e66d169d23974a4c9dd56239e2d7cca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notificationName: Notification
+  dialogBoxName: Dialog Box
+  questWindowName: Quest
+--- !u!114 &9138027157831750570
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfb3726c0da5bd9419f884b821ef7c0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toFarAway:
+    title: 
+    text: This is to far away!
+    color: {r: 1, g: 1, b: 1, a: 1}
+    icon: {fileID: 0}
+    delay: 2
+    duration: 2
+    ignoreTimeScale: 1
+  inUse:
+    title: 
+    text: My life is already fairly busy.
+    color: {r: 1, g: 1, b: 1, a: 1}
+    icon: {fileID: 0}
+    delay: 2
+    duration: 2
+    ignoreTimeScale: 1
+  questCompleted:
+    title: 
+    text: '{0} completed.'
+    color: {r: 1, g: 1, b: 1, a: 1}
+    icon: {fileID: 0}
+    delay: 2
+    duration: 2
+    ignoreTimeScale: 1
+  questFailed:
+    title: 
+    text: '{0} failed.'
+    color: {r: 1, g: 1, b: 1, a: 1}
+    icon: {fileID: 0}
+    delay: 2
+    duration: 2
+    ignoreTimeScale: 1
+  taskCompleted:
+    title: 
+    text: '{0} completed.'
+    color: {r: 1, g: 1, b: 1, a: 1}
+    icon: {fileID: 0}
+    delay: 2
+    duration: 2
+    ignoreTimeScale: 1
+  taskFailed:
+    title: 
+    text: '{0} failed.'
+    color: {r: 1, g: 1, b: 1, a: 1}
+    icon: {fileID: 0}
+    delay: 2
+    duration: 2
+    ignoreTimeScale: 1
+--- !u!114 &9185008798727187450
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d58f90c13f37d0f4992d7d801cf02f7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  savingKey: Player
+  autoSave: 0
+  provider: 0
