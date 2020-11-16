@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 namespace DevionGames.QuestSystem
 {
+    /// <summary>
+    /// QuestWindow responsible for giving player the quest or completing the quest.
+    /// </summary>
     public class QuestWindow : UIWidget
     {
         [Header("References")]
