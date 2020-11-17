@@ -1,0 +1,27 @@
+{
+    "name": "Quest System",
+    "id": "com.deviongames.questsystem",
+    "assetPath":"Assets/Devion Games/Quest System",
+    "version": "1.0.0",
+    "unityVersion": "2019.4.10",
+    "downloadPath": "https://deviongames.com/modules/QuestSystem.unitypackage",
+    "author": "Konstantin Janson",
+    "email": "support@unitycoding.com",
+    "description": "Simple and flexible quest system. It is easy to extend.",
+    "documentation": "https://deviongames.com/quest-system/getting-started/",
+    "dependencies": [
+  	    "com.deviongames.utilities",
+        "com.deviongames.ui",
+        "com.deviongames.triggers"
+    ],
+    "changelogs": 
+    [
+        {
+            "version": "1.0.0",
+            "changes": 
+            [
+                "Initial Release"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+{
+    "name": "Quest System Examples",
+    "id": "com.deviongames.questexamples",
+    "assetPath":"Assets/Devion Games/Quest System/Examples",
+    "version": "1.0.0",
+    "unityVersion": "2019.4.10",
+    "downloadPath": "https://deviongames.com/modules/QuestSystemExamples.unitypackage",
+    "author": "Konstantin Janson",
+    "email": "support@unitycoding.com",
+    "description": "Example assets and scenes for the quest system.",
+    "documentation": "https://deviongames.com/quest-system/getting-started/",
+    "dependencies": [
+        "com.deviongames.questsystem",
+        "com.deviongames.flatgui",
+  	    "com.deviongames.utilities",
+        "com.deviongames.ui",
+        "com.deviongames.triggers"
+    ],
+    "changelogs": 
+    [
+        {
+            "version": "1.0.0",
+            "changes": 
+            [
+                "Initial Release"
+            ]
+        }
+    ]
+}
