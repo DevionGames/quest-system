@@ -90,7 +90,6 @@ namespace DevionGames.QuestSystem
                     this.m_AcceptButton.onClick.AddListener(() =>
                     {
                         quest.Activate();
-                        BaseTrigger.currentUsedTrigger.InUse = false;
                         Close();
                     });
                 }
@@ -110,7 +109,6 @@ namespace DevionGames.QuestSystem
                     this.m_DeclineButton.onClick.AddListener(() =>
                     {
                         quest.Decline();
-                        BaseTrigger.currentUsedTrigger.InUse = false;
                         Close();
                     });
                 }
@@ -130,7 +128,6 @@ namespace DevionGames.QuestSystem
                     this.m_CompleteButton.onClick.AddListener(() =>
                     {
                         quest.Complete();
-                        BaseTrigger.currentUsedTrigger.InUse = false;
                         Close();
                     });
                 }
@@ -149,9 +146,19 @@ namespace DevionGames.QuestSystem
                     this.m_CancelButton.onClick.RemoveAllListeners();
                     this.m_CancelButton.onClick.AddListener(() =>
                     {
-                        quest.Cancel();
-                        BaseTrigger.currentUsedTrigger.InUse = false;
-                        Close();
+                        QuestManager.UI.dialogBox.Show(QuestManager.Notifications.cancelQuest, (int result) => {
+                            switch (result)
+                            {
+                                case 0:
+                                    quest.Cancel();
+                                    Close();
+                                    break;
+                                case 1:
+                                    break;
+                            }
+                        }, "Yes", "No");
+                        //quest.Cancel();
+                        //Close();
                     });
                 }
                 else
@@ -160,6 +167,13 @@ namespace DevionGames.QuestSystem
                     this.m_CancelButton.gameObject.SetActive(false);
                 }
             }
+        }
+
+        public override void Close()
+        {
+            base.Close();
+            if (QuestTrigger.currentUsedWindow == this)
+                QuestTrigger.currentUsedTrigger.InUse = false;
         }
     }
 }

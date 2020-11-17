@@ -135,7 +135,7 @@ namespace DevionGames.QuestSystem
             }
         }
 
-        [HideInInspector]
+        //[HideInInspector]
         public List<Quest> ActiveQuests = new List<Quest>();
         private List<Quest> CompletedQuests = new List<Quest>();
         private List<Quest> FailedQuests = new List<Quest>();
@@ -294,8 +294,18 @@ namespace DevionGames.QuestSystem
                     RemoveQuest(quest);
                 }
             }
+
+            if (quest.Status == Status.Canceled)
+            {
+                if (quest.RestartCanceled)
+                {
+                    quest.Reset();
+                    RemoveQuest(quest);
+                }
+            }
+
             //GameState.MarkDirty();
-            if(QuestManager.SavingLoading.autoSave)
+            if (QuestManager.SavingLoading.autoSave)
                 QuestManager.Save();
         }
 

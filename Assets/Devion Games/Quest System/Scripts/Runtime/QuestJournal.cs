@@ -129,7 +129,18 @@ namespace DevionGames.QuestSystem
                 if (this.m_SelectedQuest != null)
                 {
                     this.m_CancelButton.onClick.RemoveAllListeners();
-                    this.m_CancelButton.onClick.AddListener(() => { this.m_SelectedQuest.Cancel(); });
+                    this.m_CancelButton.onClick.AddListener(() => {
+                        QuestManager.UI.dialogBox.Show(QuestManager.Notifications.cancelQuest,(int result)=> {
+                            switch (result) {
+                                case 0:
+                                    this.m_SelectedQuest.Cancel();
+                                    break;
+                                case 1:
+                                    break;
+                            }
+                        } ,"Yes", "No");
+    
+                    });
                 }
             }
 

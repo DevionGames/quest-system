@@ -46,14 +46,10 @@ namespace DevionGames.QuestSystem
             set { this.m_Description = value; }
         }
 
-
-        [SerializeReference]
-        public List<Reward> rewards = new List<Reward>();
-
-        [HeaderLine("Tasks")]
         [SerializeField]
         protected bool m_AutoComplete = false;
-        public bool AutoComplete {
+        public bool AutoComplete
+        {
             get { return this.m_AutoComplete; }
         }
 
@@ -64,6 +60,18 @@ namespace DevionGames.QuestSystem
             get { return this.m_RestartFailed; }
         }
 
+        [SerializeField]
+        protected bool m_RestartCanceled = true;
+        public bool RestartCanceled
+        {
+            get { return this.m_RestartCanceled; }
+        }
+
+
+        [SerializeReference]
+        public List<Reward> rewards = new List<Reward>();
+
+        [HeaderLine("Tasks")]
         [SerializeField]
         protected TaskExecution m_TaskExecution;
         public TaskExecution TaskExecution {

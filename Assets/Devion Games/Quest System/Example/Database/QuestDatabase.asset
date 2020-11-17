@@ -20,9 +20,10 @@ MonoBehaviour:
 
 
     Thank you!'
-  rewards: []
   m_AutoComplete: 0
   m_RestartFailed: 1
+  m_RestartCanceled: 1
+  rewards: []
   m_TaskExecution: 0
   conditions: []
   tasks: []
@@ -131,6 +132,14 @@ MonoBehaviour:
   taskFailed:
     title: 
     text: '{0} failed.'
+    color: {r: 1, g: 1, b: 1, a: 1}
+    icon: {fileID: 0}
+    delay: 2
+    duration: 2
+    ignoreTimeScale: 1
+  cancelQuest:
+    title: Cancel Quest
+    text: Are you sure you want to cancel the quest?
     color: {r: 1, g: 1, b: 1, a: 1}
     icon: {fileID: 0}
     delay: 2

@@ -77,6 +77,7 @@ namespace DevionGames.QuestSystem
             QuestManager.Notifications.toFarAway.Show();
         }
 
+
         protected override void OnWentOutOfRange()
         {
             if (currentUsedWindow != null)

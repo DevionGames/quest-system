@@ -65,5 +65,11 @@ namespace DevionGames.QuestSystem.Configuration
         {
             text = "{0} failed."
         };
+        public NotificationOptions cancelQuest= new NotificationOptions()
+        {
+            title = "Cancel Quest",
+            text = "Are you sure you want to cancel the quest?"
+        };
+
     }
 }

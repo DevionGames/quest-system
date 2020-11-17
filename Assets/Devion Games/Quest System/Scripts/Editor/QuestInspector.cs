@@ -19,6 +19,8 @@ namespace DevionGames.QuestSystem
 
         protected SerializedProperty m_AutoComplete;
         protected SerializedProperty m_RestartFailed;
+        protected SerializedProperty m_RestartCanceled;
+
         protected SerializedProperty m_TaskExecution;
 
 
@@ -51,6 +53,8 @@ namespace DevionGames.QuestSystem
 
             this.m_AutoComplete = serializedObject.FindProperty("m_AutoComplete");
             this.m_RestartFailed = serializedObject.FindProperty("m_RestartFailed");
+            this.m_RestartCanceled = serializedObject.FindProperty("m_RestartCanceled");
+
             this.m_TaskExecution = serializedObject.FindProperty("m_TaskExecution");
 
             this.m_Tasks = serializedObject.FindProperty("tasks");
@@ -81,9 +85,12 @@ namespace DevionGames.QuestSystem
             EditorGUILayout.Space();
             EditorGUILayout.PropertyField(this.m_Title);
             EditorGUILayout.PropertyField(this.m_Description);
-            RewardGUI();
+
             EditorGUILayout.PropertyField(this.m_AutoComplete);
             EditorGUILayout.PropertyField(this.m_RestartFailed);
+            EditorGUILayout.PropertyField(this.m_RestartCanceled);
+
+            RewardGUI();
             EditorGUILayout.PropertyField(this.m_TaskExecution);
             TaskGUI();
             ConditionGUI();
