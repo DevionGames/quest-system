@@ -54,7 +54,8 @@ namespace DevionGames.QuestSystem
         }
 
         private void DestroySlot(Quest quest) {
-            if (this.m_QuestSlotMap.ContainsKey(quest)) {
+            if (this.m_QuestSlotMap.ContainsKey(quest))
+            {
                 Destroy(this.m_QuestSlotMap[quest].gameObject);
                 this.m_QuestSlotMap.Remove(quest);
             }

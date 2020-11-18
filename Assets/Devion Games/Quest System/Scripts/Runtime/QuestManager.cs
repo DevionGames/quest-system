@@ -299,8 +299,9 @@ namespace DevionGames.QuestSystem
             {
                 if (quest.RestartCanceled)
                 {
-                    quest.Reset();
                     RemoveQuest(quest);
+                    quest.Reset();
+                    
                 }
             }
 

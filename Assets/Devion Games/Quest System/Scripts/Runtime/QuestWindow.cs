@@ -172,7 +172,7 @@ namespace DevionGames.QuestSystem
         public override void Close()
         {
             base.Close();
-            if (QuestTrigger.currentUsedWindow == this)
+            if (QuestTrigger.currentUsedTrigger != null && QuestTrigger.currentUsedWindow == this)
                 QuestTrigger.currentUsedTrigger.InUse = false;
         }
     }

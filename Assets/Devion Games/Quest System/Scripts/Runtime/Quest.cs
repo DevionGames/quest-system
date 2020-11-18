@@ -145,7 +145,7 @@ namespace DevionGames.QuestSystem
                     return false;
                 }
             }
-            return Status == Status.Inactive;
+            return Status == Status.Inactive || (Status == Status.Canceled && this.m_RestartCanceled);
         }
 
         public bool CanDecline()
