@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace DevionGames.UIWidgets
 {
@@ -95,12 +97,34 @@ namespace DevionGames.UIWidgets
         [SerializeField]
 		protected bool m_DeactivateOnClose = true;
 
+		[Tooltip("Enables Cursor when this window is shown. Hides it again when the window is closed or character moves.")]
+		[SerializeField]
+		protected bool m_ShowAndHideCursor = false;
+		[Tooltip("Close this widget when the player moves.")]
+		[SerializeField]
+		protected bool m_CloseOnMove = true;
+		[Tooltip("When the key is pressed, show and hide cursor funtionality will be disabled.")]
+		[SerializeField]
+		protected KeyCode m_Deactivate= KeyCode.LeftControl;
+		[Tooltip("This option allows to focus and rotate player. This functionality only works with the included ThirdPersonCamera and FocusTarget component!")]
+		[SerializeField]
+		protected bool m_FocusPlayer = false;
+
+		protected static CursorLockMode m_PreviousCursorLockMode;
+		protected static bool m_PreviousCursorVisibility;
+		protected Transform m_CameraTransform;
+		protected MonoBehaviour m_CameraController;
+		protected static bool m_PreviousCameraControllerEnabled;
+		protected static List<UIWidget> m_CurrentVisibleWidgets=new List<UIWidget>();
+
 		/// <summary>
 		/// Gets a value indicating whether this widget is visible.
 		/// </summary>
 		/// <value><c>true</c> if this instance is open; otherwise, <c>false</c>.</value>
 		public bool IsVisible { 
-			get { 
+			get {
+				if (this.m_CanvasGroup == null)
+					this.m_CanvasGroup = GetComponent<CanvasGroup>();
 				return m_CanvasGroup.alpha == 1f; 
 			} 
 		}
@@ -120,14 +144,19 @@ namespace DevionGames.UIWidgets
 
 		private TweenRunner<FloatTween> m_AlphaTweenRunner;
 		private TweenRunner<Vector3Tween> m_ScaleTweenRunner;
-       
-        private void Awake ()
+
+		protected Scrollbar[] m_Scrollbars;
+
+		private void Awake ()
 		{
 			//Register the KeyCode to show or close the widget.
 			WidgetInputHandler.RegisterInput(this.m_KeyCode, this);
 			m_RectTransform = GetComponent<RectTransform> ();
 			m_CanvasGroup = GetComponent<CanvasGroup> ();
-
+			this.m_Scrollbars = GetComponentsInChildren<Scrollbar>();
+			this.m_CameraTransform = Camera.main.transform;
+			this.m_CameraController = this.m_CameraTransform.GetComponent("ThirdPersonCamera") as MonoBehaviour;
+			
 			if (!IsVisible) {
 				//Set local scale to zero, when widget is not visible. Used to correctly animate the widget.
 				m_RectTransform.localScale = Vector3.zero;
@@ -140,6 +169,7 @@ namespace DevionGames.UIWidgets
 				this.m_ScaleTweenRunner = new TweenRunner<Vector3Tween> ();
 			this.m_ScaleTweenRunner.Init (this);
             m_IsShowing = IsVisible;
+
 			OnAwake ();
 		}
 
@@ -165,6 +195,13 @@ namespace DevionGames.UIWidgets
 			}
 		}
 
+		protected virtual void Update() {
+			if (this.m_ShowAndHideCursor && this.IsVisible && this.m_CloseOnMove && (Input.GetAxis("Vertical") != 0f || Input.GetAxis("Horizontal") != 0f) && !Input.GetKey(this.m_Deactivate)) { 
+				Close();
+			}
+		}
+
+
 		/// <summary>
 		/// Show this widget.
 		/// </summary>
@@ -184,6 +221,29 @@ namespace DevionGames.UIWidgets
 			WidgetUtility.PlaySound (this.m_ShowSound, 1.0f);
 			m_CanvasGroup.interactable = true;
 			m_CanvasGroup.blocksRaycasts = true;
+			Canvas.ForceUpdateCanvases();
+			for (int i = 0; i < this.m_Scrollbars.Length; i++)
+			{
+				this.m_Scrollbars[i].value = 1f;
+			}
+			if (this.m_ShowAndHideCursor) {
+				if (m_CurrentVisibleWidgets.Count == 0) {
+					m_PreviousCursorLockMode = Cursor.lockState;
+					m_PreviousCursorVisibility = Cursor.visible;
+					if (m_CameraController != null)
+						m_PreviousCameraControllerEnabled = m_CameraController.enabled;
+				}
+				m_CurrentVisibleWidgets.Add(this);
+				if (m_CameraController != null && !Input.GetKey(this.m_Deactivate))
+				{
+					this.m_CameraController.enabled = false;
+					if(this.m_FocusPlayer)
+						this.m_CameraController.SendMessage("Focus", true, SendMessageOptions.DontRequireReceiver);
+				}
+				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
+			}
+
 			Execute("OnShow", new CallbackEventData());
 		}
 
@@ -202,6 +262,21 @@ namespace DevionGames.UIWidgets
 			WidgetUtility.PlaySound (this.m_CloseSound, 1.0f);
 			m_CanvasGroup.interactable = false;
 			m_CanvasGroup.blocksRaycasts = false;
+			if (this.m_ShowAndHideCursor) {
+				m_CurrentVisibleWidgets.Remove(this);
+				if (m_CurrentVisibleWidgets.Count == 0) {
+					Cursor.lockState = m_PreviousCursorLockMode;
+					Cursor.visible = m_PreviousCursorVisibility;
+					if (this.m_CameraController != null)
+					{
+						this.m_CameraController.enabled = m_PreviousCameraControllerEnabled;
+						if (this.m_CameraController.enabled && this.m_FocusPlayer) {
+							this.m_CameraController.SendMessage("Focus", false, SendMessageOptions.DontRequireReceiver);
+						}
+					}
+				}
+			}
+
 			Execute("OnClose", new CallbackEventData());
 
 		}

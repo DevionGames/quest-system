@@ -238,6 +238,10 @@ namespace DevionGames.QuestSystem
             }
         }
 
+        public QuestTask GetTask(string name) {
+            return tasks.FirstOrDefault(x => x.Name == name);
+        }
+
         public virtual void GetObjectData(Dictionary<string, object> data)
         {
             data.Add("Name", this.Name);

@@ -93,7 +93,7 @@ namespace DevionGames.QuestSystem
         }
 
         public void SetProgress(float progress) {
-            if (this.m_Progress != progress)
+            if (this.m_Progress != progress && Status == Status.Active)
             {
                 this.m_Progress = progress;
                 owner.NotifyTaskProgressChange(this);

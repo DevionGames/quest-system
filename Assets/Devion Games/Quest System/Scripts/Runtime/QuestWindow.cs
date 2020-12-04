@@ -31,23 +31,16 @@ namespace DevionGames.QuestSystem
         [SerializeField]
         protected Button m_CancelButton;
 
-        protected Scrollbar[] m_Scrollbars;
-
         private List<TaskSlot> m_TaskSlotCache;
 
         protected override void OnStart()
         {
             base.OnStart();
             this.m_TaskSlotCache = new List<TaskSlot>();
-            this.m_Scrollbars = GetComponentsInChildren<Scrollbar>();
         }
 
         public virtual void Show(Quest quest) {
             base.Show();
-            Canvas.ForceUpdateCanvases();
-            for (int i = 0; i < this.m_Scrollbars.Length; i++) {
-                this.m_Scrollbars[i].value = 1f;
-            }
             for (int i = 0; i < this.m_TaskSlotCache.Count; i++)
                 this.m_TaskSlotCache[i].gameObject.SetActive(false);
 

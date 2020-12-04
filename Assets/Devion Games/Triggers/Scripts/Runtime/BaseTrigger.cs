@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 namespace DevionGames
 {
     [UnityEngine.Scripting.APIUpdating.MovedFromAttribute(true, null, "Assembly-CSharp")]
-    public abstract class BaseTrigger : CallbackHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+    public abstract class BaseTrigger : CallbackHandler
     {
         //Player GameObject, overrride this and set 
         public abstract PlayerInfo PlayerInfo { get; }
@@ -18,8 +18,6 @@ namespace DevionGames
             get
             {
                 return new[] {
-                    "OnPointerEnter",
-                    "OnPointerExit",
                     "OnTriggerUsed",
                     "OnTriggerUnUsed",
                     "OnCameInRange",
@@ -108,8 +106,7 @@ namespace DevionGames
                 triggerType = TriggerInputType.LeftClick;
             }
 
-            if(triggerType.HasFlag<TriggerInputType>(TriggerInputType.Raycast))
-                EventHandler.Register<bool>(gameObject, "OnCameraRaycast", OnCameraRaycast);
+            EventHandler.Register<int>(gameObject, "OnPoinerClickTrigger", OnPointerTriggerClick);
 
             if (gameObject == PlayerInfo.gameObject || this.useDistance == -1) {
                 InRange = true;
@@ -119,6 +116,7 @@ namespace DevionGames
                 CreateTriggerCollider();
             }
         }
+
 
         protected virtual void Update() {
 
@@ -163,40 +161,14 @@ namespace DevionGames
             }
         }
 
-        protected virtual void OnCameraRaycast(bool state) {
+        private void OnPointerTriggerClick(int button)
+        {
             if (!UnityTools.IsPointerOverUI() &&
-                  (triggerType.HasFlag<TriggerInputType>(TriggerInputType.LeftClick) && Input.GetMouseButtonDown(0) ||
-                  triggerType.HasFlag<TriggerInputType>(TriggerInputType.RightClick) && Input.GetMouseButtonDown(1) ||
-                  triggerType.HasFlag<TriggerInputType>(TriggerInputType.MiddleClick) && Input.GetMouseButtonDown(2)))
+                   triggerType.HasFlag<TriggerInputType>(TriggerInputType.LeftClick) && button == 0 ||
+                   triggerType.HasFlag<TriggerInputType>(TriggerInputType.RightClick) && button == 1 ||
+                   triggerType.HasFlag<TriggerInputType>(TriggerInputType.MiddleClick) && button == 2)
             {
                 Use();
-            }
-        }
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (!UnityTools.IsPointerOverUI() && 
-                (triggerType.HasFlag<TriggerInputType>(TriggerInputType.LeftClick) && eventData.button == PointerEventData.InputButton.Left || 
-                triggerType.HasFlag<TriggerInputType>(TriggerInputType.RightClick) && eventData.button == PointerEventData.InputButton.Right || 
-                triggerType.HasFlag<TriggerInputType>(TriggerInputType.MiddleClick) && eventData.button == PointerEventData.InputButton.Middle))
-            {
-                Use();
-            }
-        }
-
-        public virtual void OnPointerEnter(PointerEventData eventData)
-        {
-            if (!UnityTools.IsPointerOverUI())
-            {
-                ExecuteEvent<ITriggerPointerEnter>(Execute, eventData);
-            }
-        }
-
-        public virtual void OnPointerExit(PointerEventData eventData)
-        {
-            if (!UnityTools.IsPointerOverUI())
-            {
-                ExecuteEvent<ITriggerPointerExit>(Execute, eventData);
             }
         }
 
@@ -213,6 +185,7 @@ namespace DevionGames
             this.InUse = true;
             return true;
         }
+
 
         //Can the trigger be used?
         public virtual bool CanUse()
@@ -243,7 +216,9 @@ namespace DevionGames
                 Collider collider = PlayerInfo.collider;
                 collider.enabled = false;
                 RaycastHit hit;
-                bool raycast = Physics.Raycast(playerPosition, direction, out hit);
+
+                LayerMask layerMask = Physics.DefaultRaycastLayers;
+                bool raycast = Physics.Raycast(playerPosition, direction,out hit, float.PositiveInfinity, layerMask, QueryTriggerInteraction.Collide);
                 collider.enabled = true;
                 if (raycast && !UnityEngine.Object.ReferenceEquals(hit.transform, transform))
                 {
@@ -313,6 +288,9 @@ namespace DevionGames
         protected virtual void CreateTriggerCollider()
         {
             Vector3 position = Vector3.zero;
+            GameObject handlerGameObject = new GameObject("TriggerRangeHandler");
+            handlerGameObject.transform.SetParent(transform,false);
+            handlerGameObject.layer = 2;
 
             Collider collider = GetComponent<Collider>();
             if (collider != null)
@@ -322,11 +300,17 @@ namespace DevionGames
                 position = transform.InverseTransformPoint(position);
             }
 
-            SphereCollider sphereCollider = gameObject.AddComponent<SphereCollider>();
+            SphereCollider sphereCollider = handlerGameObject.AddComponent<SphereCollider>();
             sphereCollider.isTrigger = true;
             sphereCollider.center = position;
             Vector3 scale = transform.lossyScale;
             sphereCollider.radius = useDistance / Mathf.Max(scale.x, scale.y, scale.z);
+
+            Rigidbody rigidbody = GetComponent<Rigidbody>();
+            if (rigidbody == null) {
+                rigidbody =gameObject.AddComponent<Rigidbody>();
+                rigidbody.isKinematic = true;
+            }
         }
 
         /*Returns true if this is the best trigger. Used for TriggerInputType.Key and TriggerInputType.OnTriggerEnter
@@ -377,16 +361,6 @@ namespace DevionGames
         protected static void Execute(ITriggerWentOutOfRange handler, GameObject player)
         {
             handler.OnWentOutOfRange(player);
-        }
-
-        protected static void Execute(ITriggerPointerEnter handler, PointerEventData eventData)
-        {
-            handler.OnPointerEnter(eventData);
-        }
-
-        protected static void Execute(ITriggerPointerExit handler, PointerEventData eventData)
-        {
-            handler.OnPointerExit(eventData);
         }
 
         //Execute event
@@ -450,8 +424,6 @@ namespace DevionGames
         protected virtual void RegisterCallbacks()
         {
             this.m_CallbackHandlers = new Dictionary<Type, string>();
-            this.m_CallbackHandlers.Add(typeof(ITriggerPointerEnter), "OnPointerEnter");
-            this.m_CallbackHandlers.Add(typeof(ITriggerPointerExit), "OnPointerExit");
             this.m_CallbackHandlers.Add(typeof(ITriggerUsedHandler), "OnTriggerUsed");
             this.m_CallbackHandlers.Add(typeof(ITriggerUnUsedHandler), "OnTriggerUnUsed");
             this.m_CallbackHandlers.Add(typeof(ITriggerCameInRange), "OnCameInRange");
@@ -467,7 +439,6 @@ namespace DevionGames
             MiddleClick = 4,
             Key = 8,
             OnTriggerEnter = 16,
-            Raycast = 32
         }
     }
 }

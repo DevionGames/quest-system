@@ -546,10 +546,16 @@ MonoBehaviour:
   m_KeyCode: 0
   m_EaseType: 28
   m_Duration: 0.7
-  m_ShowSound: {fileID: 0}
-  m_CloseSound: {fileID: 0}
+  showSound: {fileID: 0}
+  closeSound: {fileID: 0}
   m_Focus: 1
   m_DeactivateOnClose: 1
+  onShow:
+    m_PersistentCalls:
+      m_Calls: []
+  onClose:
+    m_PersistentCalls:
+      m_Calls: []
   autoClose: 1
   title: {fileID: 2896762603668904922}
   text: {fileID: 2896762603901266471}
@@ -2622,7 +2628,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -118.54004, y: -77.6001}
+  m_AnchoredPosition: {x: -118.54, y: -77.6}
   m_SizeDelta: {x: 206.95, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2057204987
@@ -2952,7 +2958,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 192.5, y: -36.286324}
+  m_AnchoredPosition: {x: 192.5, y: -33.75}
   m_SizeDelta: {x: 235, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2896762604001527946
