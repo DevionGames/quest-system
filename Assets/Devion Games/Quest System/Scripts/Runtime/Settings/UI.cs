@@ -23,6 +23,8 @@ namespace DevionGames.QuestSystem.Configuration
         public string dialogBoxName = "Dialog Box";
         [InspectorLabel("Quest Window", "Name of the quest window widget.")]
         public string questWindowName = "Quest";
+        [InspectorLabel("Quest Selection Window", "Name of the quest selection window widget.")]
+        public string questSelectionWindowName = "Quest Selection";
 
         private Notification m_Notification;
         public Notification notification
@@ -63,6 +65,20 @@ namespace DevionGames.QuestSystem.Configuration
                 }
                 Assert.IsNotNull(this.m_QuestWindow, "QuestWindow widget with name " + this.questWindowName + " is not present in scene.");
                 return this.m_QuestWindow;
+            }
+        }
+
+        private DialogBox m_QuestSelectionWindow;
+        public DialogBox questSelectionWindow
+        {
+            get
+            {
+                if (this.m_QuestSelectionWindow == null)
+                {
+                    this.m_QuestSelectionWindow = WidgetUtility.Find<DialogBox>(this.questSelectionWindowName);
+                }
+                Assert.IsNotNull(this.m_QuestSelectionWindow, "DialogBox widget with name " + this.questSelectionWindowName + " is not present in scene.");
+                return this.m_QuestSelectionWindow;
             }
         }
     }
