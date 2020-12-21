@@ -9,6 +9,13 @@ namespace DevionGames.QuestSystem
 {
     public class QuestManager : MonoBehaviour
     {
+
+
+        /// Don't destroy this object instance when loading new scenes.
+        /// </summary>
+        public bool dontDestroyOnLoad = true;
+
+
         public event Quest.StatusChanged OnQuestStatusChanged;
         public event Quest.TaskStatusChanged OnTaskStatusChanged;
         public event Quest.TaskProgressChanged OnTaskProgressChanged;
@@ -109,11 +116,6 @@ namespace DevionGames.QuestSystem
             }
             return default(T);
         }
-
-        /// Don't destroy this object instance when loading new scenes.
-        /// </summary>
-        public bool dontDestroyOnLoad = true;
-
 
         private PlayerInfo m_PlayerInfo;
         public PlayerInfo PlayerInfo

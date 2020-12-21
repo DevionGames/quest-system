@@ -126,6 +126,8 @@ namespace DevionGames
             if (Input.GetKeyDown(key) && triggerType.HasFlag<TriggerInputType>(TriggerInputType.Key) && InRange && IsBestTrigger()){
                 Use();
             }
+
+     
         }
 
         protected virtual void OnDestroy()
@@ -206,7 +208,7 @@ namespace DevionGames
                 return false;
             }
 
-            if (this.m_CheckBlocking)
+           /* if (this.m_CheckBlocking)
             {
                 Vector3 targetPosition = UnityTools.GetBounds(gameObject).center;
                 Vector3 playerPosition = PlayerInfo.transform.position;
@@ -224,7 +226,7 @@ namespace DevionGames
                 {
                     return false;
                 }
-            }
+            }*/
 
             Animator animator = PlayerInfo.animator;
             if (PlayerInfo != null && animator != null)

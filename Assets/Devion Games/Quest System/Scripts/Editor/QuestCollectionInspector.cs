@@ -44,30 +44,6 @@ namespace DevionGames.QuestSystem
             };
         }
 
-        private void CheckForDatabase(Object current)
-        {
-            if (QuestSystemEditor.Database == null && current != null)
-            {
-                if (EditorApplication.isPlaying)
-                {
-                    QuestSystemEditor.Database = QuestManager.Database;
-                }
-
-                QuestDatabase[] databases = EditorTools.FindAssets<QuestDatabase>();
-
-                for (int i = 0; i < databases.Length; i++)
-                {
-                    List<INameable> items = new List<INameable>();
-                    items.AddRange(databases[i].items);
-                  
-
-                    if (items.Find(x => x == (INameable)current) != null)
-                    {
-                        QuestSystemEditor.Database = databases[i];
-                    }
-                }
-            }
-        }
 
         public override void OnInspectorGUI()
         {
@@ -76,7 +52,6 @@ namespace DevionGames.QuestSystem
             EditorGUI.EndDisabledGroup();
             serializedObject.Update();
             GUILayout.Space(3f);
-            this.m_QuestList.elementHeight = (QuestSystemEditor.Database != null && (QuestSystemEditor.Database.items.Count > 0) || this.m_QuestList.count == 0 ? 21 : (30 + EditorGUIUtility.singleLineHeight + 4));
             this.m_QuestList.DoLayoutList();
             EditorGUILayout.Space();
          

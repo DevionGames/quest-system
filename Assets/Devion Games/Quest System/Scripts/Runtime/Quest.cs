@@ -137,7 +137,7 @@ namespace DevionGames.QuestSystem
           
             for (int i = 0; i < conditions.Count; i++) {
                 ICondition condition = conditions[i];
-                condition.Initialize(QuestManager.current.PlayerInfo.gameObject, QuestManager.current.PlayerInfo);
+                condition.Initialize(QuestManager.current.PlayerInfo.gameObject, QuestManager.current.PlayerInfo, QuestManager.current.PlayerInfo.gameObject.GetComponent<Blackboard>());
                 condition.OnStart();
                 if (condition.OnUpdate() == ActionStatus.Failure)
                 {
