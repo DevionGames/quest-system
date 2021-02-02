@@ -89,6 +89,7 @@ namespace DevionGames.QuestSystem
         }
 
         public void AddProgress(float progress) {
+            Debug.Log(this.RequiredProgress + " " + this.m_Progress + " " + progress);
             SetProgress(this.m_Progress + progress);
         }
 

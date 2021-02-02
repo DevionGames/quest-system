@@ -297,7 +297,6 @@ namespace DevionGames.QuestSystem
         Parallel
     }
 
-
     public enum Status:int
     {
         Inactive=0,

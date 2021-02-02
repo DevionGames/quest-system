@@ -144,7 +144,7 @@ namespace DevionGames
         protected virtual void OnTriggerEnter(Collider other)
         {
             //Check if the collider other is player 
-            if (isActiveAndEnabled && other.tag == PlayerInfo.gameObject.tag)
+            if (isActiveAndEnabled && PlayerInfo.gameObject != null && other.tag == PlayerInfo.gameObject.tag)
             {
                 //Set that player is in range
                 InRange = true;
@@ -155,7 +155,7 @@ namespace DevionGames
         protected virtual void OnTriggerExit(Collider other)
         {
             //Check if the collider other is player
-            if (isActiveAndEnabled && other.tag == PlayerInfo.gameObject.tag)
+            if (isActiveAndEnabled && PlayerInfo.gameObject != null && other.tag == PlayerInfo.gameObject.tag)
             {
                 //Set that player is out of range
                 InRange = false;
@@ -236,7 +236,7 @@ namespace DevionGames
                     if (animator.IsInTransition(j))
                         return false;
                 }
-            }               
+            }
             //Trigger can be used  
             return true;
         }
@@ -335,6 +335,11 @@ namespace DevionGames
                 if (dir != Vector3.zero)
                    angle = Quaternion.Angle(PlayerInfo.transform.rotation, Quaternion.LookRotation(dir));
 
+                //Pickup items only in front
+               /*if (angle > 90) {
+                   continue;
+                }
+                Debug.Log(Vector3.Angle(t.transform.position - PlayerInfo.transform.position, PlayerInfo.transform.forward)+" != "+angle);*/
                 float dist = Vector3.Distance(t.transform.position, currentPos) * angle;
                 if (dist < minDist)
                 {

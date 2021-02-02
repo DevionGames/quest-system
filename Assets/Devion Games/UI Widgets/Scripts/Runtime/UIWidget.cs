@@ -10,7 +10,7 @@ namespace DevionGames.UIWidgets
 	/// Your custom widgets should extend from this class or from child classes. 
 	/// This way you can always track existing widgets by name in your game using WidgetUtility.Find<T>(name).
 	/// </summary>
-	[RequireComponent (typeof(CanvasGroup))]
+	[RequireComponent(typeof(CanvasGroup))]
 	public class UIWidget : CallbackHandler
 	{
 		/// <summary>
@@ -25,49 +25,53 @@ namespace DevionGames.UIWidgets
 		/// </summary>
 		/// <value>The name.</value>
 		public string Name {
-			get{ return name; }
-			set{ name = value; }
+			get { return name; }
+			set { name = value; }
 		}
 
 		/// <summary>
 		/// Callbacks for Inspector.
 		/// </summary>
-        public override string[] Callbacks
-        {
-            get
-            {
-                return new string[]{
-                    "OnShow",
-                    "OnClose",
-                };
-            }
-        }
+		public override string[] Callbacks
+		{
+			get
+			{
+				return new string[]{
+					"OnShow",
+					"OnClose",
+				};
+			}
+		}
 
 		/// <summary>
 		/// Widgets with higher priority will be prefered when used with WidgetUtility.Find<T>(name).
 		/// </summary>
 		[Tooltip("Widgets with higher priority will be prefered when used with WidgetUtility.Find<T>(name).")]
-        [Range (0, 100)]
+		[Range(0, 100)]
 		public int priority;
 
-        /// <summary>
-        /// Key to toggle show and close
-        /// </summary>
-        [Header("Appearence")]
+		/// <summary>
+		/// Key to toggle show and close
+		/// </summary>
+		[Header("Appearence")]
 		[Tooltip("Key to show or close this widget.")]
-        [SerializeField]
-        protected KeyCode m_KeyCode = KeyCode.None;
+		[SerializeField]
+		protected KeyCode m_KeyCode = KeyCode.None;
 
 		[Tooltip("Easing equation type used to tween this widget.")]
 		[SerializeField]
-		private EasingEquations.EaseType m_EaseType= EasingEquations.EaseType.EaseInOutBack;
+		private EasingEquations.EaseType m_EaseType = EasingEquations.EaseType.EaseInOutBack;
 
-        /// <summary>
-        /// The duration to tween this widget.
-        /// </summary>
+		/// <summary>
+		/// The duration to tween this widget.
+		/// </summary>
 		[Tooltip("The duration to tween this widget.")]
 		[SerializeField]
 		protected float m_Duration = 0.7f;
+
+		[SerializeField]
+		protected bool m_IgnoreTimeScale = true;
+		public bool IgnoreTimeScale { get { return this.m_IgnoreTimeScale; } }
 
         /// <summary>
         /// The AudioClip that will be played when this widget shows.
@@ -114,6 +118,7 @@ namespace DevionGames.UIWidgets
 		protected static bool m_PreviousCursorVisibility;
 		protected Transform m_CameraTransform;
 		protected MonoBehaviour m_CameraController;
+		protected MonoBehaviour m_ThirdPersonController;
 		protected static bool m_PreviousCameraControllerEnabled;
 		protected static List<UIWidget> m_CurrentVisibleWidgets=new List<UIWidget>();
 
@@ -147,6 +152,13 @@ namespace DevionGames.UIWidgets
 
 		protected Scrollbar[] m_Scrollbars;
 
+		protected bool m_IsLocked = false;
+		public bool IsLocked
+		{
+			get { return this.m_IsLocked; }
+		}
+
+
 		private void Awake ()
 		{
 			//Register the KeyCode to show or close the widget.
@@ -156,6 +168,11 @@ namespace DevionGames.UIWidgets
 			this.m_Scrollbars = GetComponentsInChildren<Scrollbar>();
 			this.m_CameraTransform = Camera.main.transform;
 			this.m_CameraController = this.m_CameraTransform.GetComponent("ThirdPersonCamera") as MonoBehaviour;
+			PlayerInfo playerInfo = new PlayerInfo("Player");
+
+			if (playerInfo.gameObject != null)
+				this.m_ThirdPersonController = playerInfo.gameObject.GetComponent("ThirdPersonController") as MonoBehaviour;
+
 
 			if (!IsVisible) {
 				//Set local scale to zero, when widget is not visible. Used to correctly animate the widget.
@@ -164,7 +181,7 @@ namespace DevionGames.UIWidgets
 			if (this.m_AlphaTweenRunner == null)
 				this.m_AlphaTweenRunner = new TweenRunner<FloatTween> ();
 			this.m_AlphaTweenRunner.Init (this);
-			
+
 			if (this.m_ScaleTweenRunner == null)
 				this.m_ScaleTweenRunner = new TweenRunner<Vector3Tween> ();
 			this.m_ScaleTweenRunner.Init (this);
@@ -196,7 +213,8 @@ namespace DevionGames.UIWidgets
 		}
 
 		protected virtual void Update() {
-			if (this.m_ShowAndHideCursor && this.IsVisible && this.m_CloseOnMove && (Input.GetAxis("Vertical") != 0f || Input.GetAxis("Horizontal") != 0f) && !Input.GetKey(this.m_Deactivate)) { 
+			if (this.m_ShowAndHideCursor && this.IsVisible && this.m_CloseOnMove && (this.m_ThirdPersonController == null || this.m_ThirdPersonController.enabled) && (Input.GetAxis("Vertical") != 0f || Input.GetAxis("Horizontal") != 0f) && !Input.GetKey(this.m_Deactivate))
+			{
 				Close();
 			}
 		}
@@ -236,7 +254,7 @@ namespace DevionGames.UIWidgets
 				if (m_CameraController != null &&  !Input.GetKey(this.m_Deactivate) && m_CurrentVisibleWidgets.Count == 1)
 				{
 					this.m_CameraController.enabled = false;
-					if(this.m_FocusPlayer)
+					if(this.m_FocusPlayer && !this.m_IsLocked)
 						this.m_CameraController.SendMessage("Focus", true, SendMessageOptions.DontRequireReceiver);
 				}
 				Cursor.lockState = CursorLockMode.None;
@@ -286,7 +304,8 @@ namespace DevionGames.UIWidgets
 					easeType = m_EaseType,
 					duration = m_Duration,
 					startValue = startValue,
-					targetValue = targetValue
+					targetValue = targetValue,
+					ignoreTimeScale = m_IgnoreTimeScale
 				};
 
 				alphaTween.AddOnChangedCallback ((float value) => {
@@ -310,8 +329,9 @@ namespace DevionGames.UIWidgets
                 easeType = m_EaseType,
                 duration = m_Duration,
                 startValue = startValue,
-                targetValue = targetValue
-            };
+                targetValue = targetValue,
+				ignoreTimeScale = m_IgnoreTimeScale
+			};
             scaleTween.AddOnChangedCallback((Vector3 value) => {
                 m_RectTransform.localScale = value;
             });
@@ -342,6 +362,19 @@ namespace DevionGames.UIWidgets
 		protected virtual void OnDestroy() {
 			//Unregister input key
 			WidgetInputHandler.UnregisterInput(this.m_KeyCode, this);
+		}
+
+		public void Lock(bool state)
+		{
+			this.m_IsLocked = state;
+		}
+
+		public static void LockAll(bool state) {
+			UIWidget[] widgets = WidgetUtility.FindAll<UIWidget>();
+			for (int i = 0; i < widgets.Length; i++)
+			{
+				widgets[i].Lock(state);
+			}
 		}
 	}
 }
