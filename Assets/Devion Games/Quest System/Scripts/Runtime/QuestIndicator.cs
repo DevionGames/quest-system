@@ -40,7 +40,7 @@ namespace DevionGames.QuestSystem
             UpdateQuestIndicator();
         }
 
-        private void UpdateQuestIndicator()
+        public void UpdateQuestIndicator()
         {
             availableQuest.SetActive(false);
             completeableQuest.SetActive(false);

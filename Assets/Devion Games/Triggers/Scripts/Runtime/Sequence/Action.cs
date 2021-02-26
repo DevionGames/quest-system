@@ -47,14 +47,24 @@ namespace DevionGames
 
         public virtual void OnSequenceEnd(){}
 
+        public virtual void OnInterrupt() { }
+
         protected GameObject GetTarget(TargetType type)
         {
-            return type == TargetType.Player ? playerInfo.gameObject : gameObject;
+            switch (type)
+            {
+                case TargetType.Player:
+                    return playerInfo.gameObject;
+                case TargetType.Camera:
+                    return Camera.main.gameObject;
+            }
+            return gameObject;
         }
     }
 
     public enum TargetType { 
         Self,
-        Player
+        Player,
+        Camera
     }
 }

@@ -48,6 +48,7 @@ namespace DevionGames
         protected delegate void PointerEventFunction<T>(T handler, PointerEventData eventData);
 
         protected bool m_CheckBlocking = true;
+        protected bool m_Started = false;
 
         //Is the player in range, set by OnTriggerEnter/OnTriggerExit or if trigger is attached to player in Start?
         private bool m_InRange;
@@ -115,6 +116,20 @@ namespace DevionGames
                 //Create trigger collider
                 CreateTriggerCollider();
             }
+            this.m_Started = true;
+        }
+
+        protected virtual void OnDisable() {
+            if (Time.frameCount > 0){
+                this.InRange = false;
+            }
+        }
+
+        protected virtual void OnEnable()
+        {
+           
+            if (Time.frameCount > 0 && this.m_Started && PlayerInfo.transform != null)
+                InRange = Vector3.Distance(transform.position, PlayerInfo.transform.position) <= this.useDistance;
         }
 
 
@@ -126,8 +141,6 @@ namespace DevionGames
             if (Input.GetKeyDown(key) && triggerType.HasFlag<TriggerInputType>(TriggerInputType.Key) && InRange && IsBestTrigger()){
                 Use();
             }
-
-     
         }
 
         protected virtual void OnDestroy()
@@ -243,16 +256,17 @@ namespace DevionGames
 
         protected virtual void OnWentOutOfRange() { }
 
-        private void NotifyWentOutOfRange(){
+        protected void NotifyWentOutOfRange(){
             ExecuteEvent<ITriggerWentOutOfRange>(Execute, true);
             BaseTrigger.m_TriggerInRange.Remove(this);
             this.InUse = false;
             OnWentOutOfRange();
         }
 
-        protected virtual void OnCameInRange() { }
+        protected virtual void OnCameInRange() { 
+        }
 
-        private void NotifyCameInRange() {
+        protected void NotifyCameInRange() {
             ExecuteEvent<ITriggerCameInRange>(Execute, true);
             BaseTrigger.m_TriggerInRange.Add(this);
             //InputTriggerType.OnTriggerEnter is supported
@@ -274,7 +288,7 @@ namespace DevionGames
 
         protected virtual void OnTriggerUnUsed() { }
 
-        private void NotifyUnUsed() {
+        protected void NotifyUnUsed() {
             ExecuteEvent<ITriggerUnUsedHandler>(Execute, true);
             BaseTrigger.currentUsedTrigger = null;
             OnTriggerUnUsed();
@@ -317,7 +331,7 @@ namespace DevionGames
 
         /*Returns true if this is the best trigger. Used for TriggerInputType.Key and TriggerInputType.OnTriggerEnter
           Calculated based on distance and rotation of the player to the trigger.*/
-        protected virtual bool IsBestTrigger()
+        public virtual bool IsBestTrigger()
         {
             if (gameObject == PlayerInfo.gameObject)
             {

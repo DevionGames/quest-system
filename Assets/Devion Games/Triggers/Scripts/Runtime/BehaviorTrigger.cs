@@ -8,10 +8,13 @@ namespace DevionGames
     [UnityEngine.Scripting.APIUpdating.MovedFromAttribute(true, null, "Assembly-CSharp")]
     public class BehaviorTrigger : BaseTrigger
     {
+        public ActionTemplate actionTemplate;
         //Actions to run when the trigger is used.
 
         [SerializeReference]
         public List<Action> actions = new List<Action>();
+        [SerializeField]
+        protected bool m_Interruptable=false;
 
         //Task behavior that runs custom actions
         private Sequence m_ActionBehavior;
@@ -35,8 +38,9 @@ namespace DevionGames
             List<ITriggerEventHandler> list = new List<ITriggerEventHandler>(this.m_TriggerEvents);
             list.AddRange(actions.Where(x => x is ITriggerEventHandler).Cast<ITriggerEventHandler>());
             this.m_TriggerEvents = list.ToArray();
-            this.m_ActionBehavior = new Sequence(gameObject, PlayerInfo, GetComponent<Blackboard>(), actions.ToArray());
-            
+            if(actionTemplate != null)
+                actionTemplate = Instantiate(actionTemplate);
+            this.m_ActionBehavior = new Sequence(gameObject, PlayerInfo, GetComponent<Blackboard>(), actionTemplate != null? actionTemplate.actions.ToArray() : actions.ToArray());
         }
 
         //Called once per frame
@@ -49,9 +53,51 @@ namespace DevionGames
             {
                 Use();
             }
+            if (this.m_Interruptable && this.InUse && (Mathf.Abs(Input.GetAxis("Horizontal")) > 0.5f || Mathf.Abs(Input.GetAxis("Vertical")) > 0.5f))
+            {
+                NotifyInterrupted();
+                this.m_ActionBehavior.Interrupt();  
+                return;
+            }
             //Update task behavior, set in use if it is running
             this.InUse = this.m_ActionBehavior.Tick();
 
+        }
+
+        protected override void OnDisable()
+        {
+            if (Time.frameCount > 0)
+            {
+                if (this.m_Interruptable && this.InUse) {
+                    NotifyInterrupted();
+                    this.m_ActionBehavior.Interrupt();
+                }
+                this.InRange = false;
+            }
+        }
+
+        protected override void OnDestroy()
+        {
+
+            if (Time.frameCount > 0)
+            {
+                if (this.m_Interruptable && this.InUse)
+                {
+                    NotifyInterrupted();
+                    this.m_ActionBehavior.Interrupt();
+                }
+                this.InRange = false;
+            }
+        }
+
+        protected void NotifyInterrupted() {
+            this.InUse = false;
+          //  NotifyUnUsed();
+            OnTriggerInterrupted();
+        }
+
+        protected virtual void OnTriggerInterrupted() { 
+        
         }
 
         protected override void OnTriggerUsed()

@@ -20,6 +20,7 @@ namespace DevionGames.QuestSystem
         protected SerializedProperty m_AutoComplete;
         protected SerializedProperty m_RestartFailed;
         protected SerializedProperty m_RestartCanceled;
+        protected SerializedProperty m_RestartCompleted;
 
         protected SerializedProperty m_TaskExecution;
 
@@ -54,6 +55,7 @@ namespace DevionGames.QuestSystem
             this.m_AutoComplete = serializedObject.FindProperty("m_AutoComplete");
             this.m_RestartFailed = serializedObject.FindProperty("m_RestartFailed");
             this.m_RestartCanceled = serializedObject.FindProperty("m_RestartCanceled");
+            this.m_RestartCompleted = serializedObject.FindProperty("m_RestartCompleted");
 
             this.m_TaskExecution = serializedObject.FindProperty("m_TaskExecution");
 
@@ -89,6 +91,7 @@ namespace DevionGames.QuestSystem
             EditorGUILayout.PropertyField(this.m_AutoComplete);
             EditorGUILayout.PropertyField(this.m_RestartFailed);
             EditorGUILayout.PropertyField(this.m_RestartCanceled);
+            EditorGUILayout.PropertyField(this.m_RestartCompleted);
 
             RewardGUI();
             EditorGUILayout.PropertyField(this.m_TaskExecution);
@@ -376,6 +379,7 @@ namespace DevionGames.QuestSystem
 
                 object value = System.Activator.CreateInstance(list[index].GetType());
                 list[index] = value;
+                EditorUtility.SetDirty(target);
             });
             menu.AddSeparator(string.Empty);
             menu.AddItem(new GUIContent("Remove " + this.m_ElementType.Name), false, delegate { list.RemoveAt(index); EditorUtility.SetDirty(target); });
@@ -386,6 +390,7 @@ namespace DevionGames.QuestSystem
                     object value = list[index];
                     list.RemoveAt(index);
                     list.Insert(index - 1, value);
+                    EditorUtility.SetDirty(target);
                 });
             }
             else
@@ -400,6 +405,7 @@ namespace DevionGames.QuestSystem
                     object value = list[index];
                     list.RemoveAt(index);
                     list.Insert(index + 1, value);
+                    EditorUtility.SetDirty(target);
                 });
             }
             else
@@ -423,6 +429,7 @@ namespace DevionGames.QuestSystem
                         fields[i].SetValue(instance, value);
                     }
                     list.Insert(index + 1, instance);
+                    EditorUtility.SetDirty(target);
                 });
 
                 if (list[index].GetType() == m_ObjectToCopy.GetType())
@@ -436,6 +443,7 @@ namespace DevionGames.QuestSystem
                             object value = fields[i].GetValue(m_ObjectToCopy);
                             fields[i].SetValue(instance, value);
                         }
+                        EditorUtility.SetDirty(target);
                     });
                 }
                 else

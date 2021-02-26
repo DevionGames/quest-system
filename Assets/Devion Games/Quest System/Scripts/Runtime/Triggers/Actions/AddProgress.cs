@@ -8,6 +8,7 @@ namespace DevionGames.QuestSystem
 {
     [Icon("Quest")]
     [ComponentMenu("Quest System/Show Window")]
+    [System.Serializable]
     public class AddProgress : Action
     {
         [QuestPicker(true)]
@@ -21,6 +22,7 @@ namespace DevionGames.QuestSystem
 
         public override ActionStatus OnUpdate()
         {
+            Debug.Log("Add");
             Quest current = QuestManager.current.GetQuest(quest.Name);
 
             if (current != null && current.Status== Status.Active)

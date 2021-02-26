@@ -13,7 +13,12 @@ namespace DevionGames
     {
         private void DrawInspector()
         {
-            EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying);
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Interruptable"));
+            SerializedProperty actionTemplate = serializedObject.FindProperty("actionTemplate");
+            EditorGUILayout.PropertyField(actionTemplate);
+
+            EditorGUI.BeginDisabledGroup(EditorApplication.isPlaying || actionTemplate.objectReferenceValue != null);
+
             if (EditorTools.RightArrowButton(new GUIContent("Edit Behavior", "Trigger use behavior"), GUILayout.Height(20f)))
             {
                 SerializedProperty actionList = serializedObject.FindProperty("actions");
@@ -21,6 +26,7 @@ namespace DevionGames
                 ObjectWindow.ShowWindow("Edit Behavior",serializedObject, actionList);
             }
             EditorGUI.EndDisabledGroup();
+            
         }
 
 

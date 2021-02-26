@@ -286,6 +286,7 @@ namespace DevionGames.QuestSystem
             if (quest.Status == Status.Completed && !this.CompletedQuests.Contains(quest)) {
                 this.CompletedQuests.Add(quest);
                 RemoveQuest(quest);
+                
             }
 
             if (quest.Status == Status.Failed && !this.FailedQuests.Contains(quest)) {

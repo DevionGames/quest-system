@@ -23,6 +23,7 @@ MonoBehaviour:
   m_AutoComplete: 0
   m_RestartFailed: 1
   m_RestartCanceled: 1
+  m_RestartCompleted: 0
   rewards: []
   m_TaskExecution: 0
   conditions: []

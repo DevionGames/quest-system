@@ -5,6 +5,7 @@ namespace DevionGames.QuestSystem
     [UnityEngine.Scripting.APIUpdating.MovedFromAttribute(true, null, "Assembly-CSharp")]
     [Icon("Quest")]
     [ComponentMenu("Quest System/Has Quest")]
+    [System.Serializable]
     public class HasQuest : Action, ICondition
     {
         [QuestPicker(true)]

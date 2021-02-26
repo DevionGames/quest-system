@@ -67,6 +67,12 @@ namespace DevionGames.QuestSystem
             get { return this.m_RestartCanceled; }
         }
 
+        [SerializeField]
+        protected bool m_RestartCompleted = false;
+        public bool RestartCompleted
+        {
+            get { return this.m_RestartCompleted; }
+        }
 
         [SerializeReference]
         public List<Reward> rewards = new List<Reward>();
@@ -189,7 +195,13 @@ namespace DevionGames.QuestSystem
                 {
                     quest.rewards[i].GiveReward();
                 }
+                if (quest.RestartCompleted)
+                {
+                    quest.Reset();
+                }
             }
+           
+
             if (quest.Status == Status.Failed)
                 QuestManager.Notifications.questFailed.Show(quest.Title);
         }

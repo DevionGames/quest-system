@@ -2,7 +2,7 @@
     "name": "Quest System",
     "id": "com.deviongames.questsystem",
     "assetPath":"Assets/Devion Games/Quest System",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "unityVersion": "2019.4.10",
     "downloadPath": "https://deviongames.com/modules/QuestSystem.unitypackage",
     "author": "Konstantin Janson",
@@ -32,6 +32,18 @@
                 "Fixed: When accept a quest and open the quest givers window again but not click on complete just close the window, you will not allowed to open it anymore.",
                 "Switched Indicator example",
                 "Quest Selection"
+            ]
+        }, 
+        {
+            "version": "1.0.2",
+            "changes": 
+            [
+                "Restart Completed Quest option",
+                "UpdateQuestIndicators action (used when player is level up, to show availible quests )",
+                "QuestTalkWindow",
+                "ShowTalkWindow action",
+                "Talk Quest Example",
+                "HasQuestTask action"
             ]
         }
     ]

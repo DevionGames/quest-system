@@ -1,5 +1,6 @@
-- Restart Canceled Quest option
-- Dialog Box to ask if player realy wants to cancel a quest.
-- Fixed: When accept a quest and open the quest givers window again but not click on complete just close the window, you will not allowed to open it anymore.
-- Switched Indicator example
-- Quest Selection
+- Restart Completed Quest option
+- UpdateQuestIndicators action (used when player is level up, to show availible quests )
+- QuestTalkWindow
+- ShowTalkWindow action
+- Talk Quest Example
+- HasQuestTask action
