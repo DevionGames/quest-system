@@ -22,6 +22,7 @@ namespace DevionGames.QuestSystem
         public event Quest.TaskTimerTick OnTaskTimerTick;
 
         private static QuestManager m_Current;
+        private static ISaveProvider m_SaveProvider;
 
         /// <summary>
         /// The InventoryManager singleton object. This object is set inside Awake()
@@ -165,6 +166,12 @@ namespace DevionGames.QuestSystem
                     }
                     DontDestroyOnLoad(gameObject);
                 }
+
+                if (!TryGetComponent<ISaveProvider>(out m_SaveProvider))
+                {
+                    m_SaveProvider = new ProviderPlayerPrefs();
+                }
+
                 if (QuestManager.SavingLoading.autoSave)
                     Load();
 
@@ -185,17 +192,17 @@ namespace DevionGames.QuestSystem
             string completedQuestData = JsonSerializer.Serialize(QuestManager.current.CompletedQuests.ToArray());
             string failedQuestData =JsonSerializer.Serialize(QuestManager.current.FailedQuests.ToArray());
 
-            PlayerPrefs.SetString(key + ".ActiveQuests", activeQuestData);
-            PlayerPrefs.SetString(key + ".CompletedQuests", completedQuestData);
-            PlayerPrefs.SetString(key + ".FailedQuests", failedQuestData);
+            m_SaveProvider.SetString(key + ".ActiveQuests", activeQuestData);
+            m_SaveProvider.SetString(key + ".CompletedQuests", completedQuestData);
+            m_SaveProvider.SetString(key + ".FailedQuests", failedQuestData);
 
-            List<string> keys = PlayerPrefs.GetString("QuestSystemSavedKeys").Split(';').ToList();
+            List<string> keys = m_SaveProvider.GetString("QuestSystemSavedKeys").Split(';').ToList();
             keys.RemoveAll(x => string.IsNullOrEmpty(x));
             if (!keys.Contains(key))
             {
                 keys.Add(key);
             }
-            PlayerPrefs.SetString("QuestSystemSavedKeys", string.Join(";", keys));
+            m_SaveProvider.SetString("QuestSystemSavedKeys", string.Join(";", keys));
 
             if (QuestManager.DefaultSettings.debugMessages)
             {
@@ -211,9 +218,9 @@ namespace DevionGames.QuestSystem
 
         public static void Load(string key) { 
 
-            string activeQuestData = PlayerPrefs.GetString(key + ".ActiveQuests");
-            string completedQuestData = PlayerPrefs.GetString(key + ".CompletedQuests");
-            string failedQuestData = PlayerPrefs.GetString(key + ".FailedQuests");
+            string activeQuestData = m_SaveProvider.GetString(key + ".ActiveQuests");
+            string completedQuestData = m_SaveProvider.GetString(key + ".CompletedQuests");
+            string failedQuestData = m_SaveProvider.GetString(key + ".FailedQuests");
 
             LoadQuests(activeQuestData, ref QuestManager.current.ActiveQuests, true);
             LoadQuests(completedQuestData, ref QuestManager.current.CompletedQuests);
