@@ -169,7 +169,7 @@ namespace DevionGames.QuestSystem
 
                 if (!TryGetComponent<ISaveProvider>(out m_SaveProvider))
                 {
-                    m_SaveProvider = new ProviderPlayerPrefs();
+                    m_SaveProvider = gameObject.AddComponent<ProviderPlayerPrefs>();
                 }
 
                 if (QuestManager.SavingLoading.autoSave)
